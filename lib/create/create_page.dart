@@ -17,6 +17,8 @@ class _CreatePageState extends State<CreatePage> {
 
   File? _image;
 
+  bool isLoading = false;
+
   @override
   void dispose() {
     _titleTextController.dispose();
@@ -30,13 +32,25 @@ class _CreatePageState extends State<CreatePage> {
         title: const Text('새 게시물'),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               // 이미지 피커 실행
               if (_image != null && _titleTextController.text.isNotEmpty) {
-                model.uploadPost(
+                setState(() {
+                  isLoading = true;
+                });
+
+                await model.uploadPost(
                   _titleTextController.text,
                   _image!,
                 );
+
+                setState(() {
+                  isLoading = false;
+                });
+
+                if (mounted) {
+                  Navigator.pop(context);
+                }
               }
             },
             icon: const Icon(Icons.send),
@@ -60,6 +74,7 @@ class _CreatePageState extends State<CreatePage> {
                     fillColor: Colors.white70),
               ),
               const SizedBox(height: 20),
+              if (isLoading) const CircularProgressIndicator(),
               ElevatedButton(
                 onPressed: () async {
                   _image = await model.getImage();
