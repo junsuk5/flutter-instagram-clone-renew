@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone_renew/create/create_page.dart';
+import 'package:instagram_clone_renew/detail_post/detail_post_page.dart';
 import 'package:instagram_clone_renew/tab/search/search_model.dart';
 
 import '../../domain/post.dart';
@@ -35,35 +36,44 @@ class SearchPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(2.0),
         child: StreamBuilder<QuerySnapshot<Post>>(
-          stream: model.postsStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('알 수 없는 에러');
-            }
+            stream: model.postsStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('알 수 없는 에러');
+              }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            List<Post> posts = snapshot.data!.docs.map((e) => e.data()).toList();
+              List<Post> posts =
+                  snapshot.data!.docs.map((e) => e.data()).toList();
 
-            return GridView.builder(
-              itemCount: posts.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 2.0,
-                crossAxisSpacing: 2.0,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                final post = posts[index];
-                return Image.network(
-                  post.imageUrl,
-                  fit: BoxFit.cover,
-                );
-              },
-            );
-          }
-        ),
+              return GridView.builder(
+                itemCount: posts.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 2.0,
+                  crossAxisSpacing: 2.0,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  final post = posts[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailPostPage(post: post)),
+                      );
+                    },
+                    child: Image.network(
+                      post.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
+              );
+            }),
       ),
     );
   }
