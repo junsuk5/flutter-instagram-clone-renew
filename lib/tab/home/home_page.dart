@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone_renew/tab/home/home_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final model = HomeModel();
@@ -33,15 +38,22 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       width: 80,
                       height: 80,
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(model.getProfileImageUrl()),
+                      child: GestureDetector(
+                        onTap: () async {
+                          await model.updateProfileImage();
+
+                          setState(() {});
+                        },
+                        child: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(model.getProfileImageUrl()),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(model.getEmail(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                    Text(
+                      model.getEmail(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(model.getNickName()),
                     const SizedBox(height: 8),
@@ -49,19 +61,22 @@ class HomePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.network('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202207/31/d399eb2b-154e-4585-bdbb-b8a86939577c.jpg',
+                        Image.network(
+                          'https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202207/31/d399eb2b-154e-4585-bdbb-b8a86939577c.jpg',
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
                         ),
                         const SizedBox(width: 4),
-                        Image.network('http://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/01/05/0vU4v7vCfjju637769738893922804.jpg',
+                        Image.network(
+                          'http://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/01/05/0vU4v7vCfjju637769738893922804.jpg',
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
                         ),
                         const SizedBox(width: 4),
-                        Image.network('https://pbs.twimg.com/profile_images/1374979417915547648/vKspl9Et_400x400.jpg',
+                        Image.network(
+                          'https://pbs.twimg.com/profile_images/1374979417915547648/vKspl9Et_400x400.jpg',
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
