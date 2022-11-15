@@ -91,7 +91,7 @@ packages:
       name: desktop_webview_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.10"
+    version: "0.0.11"
   email_validator:
     dependency: transitive
     description:
