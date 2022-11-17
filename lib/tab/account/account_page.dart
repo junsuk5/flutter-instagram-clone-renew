@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../detail_post/detail_post_page.dart';
@@ -81,12 +82,23 @@ class AccountPage extends StatelessWidget {
                   ],
                 ),
                 Column(
-                  children: const [
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 18),
+                  children: [
+                    StreamBuilder<QuerySnapshot<Post>>(
+                      stream: model.postsStream,
+                      builder: (context, snapshot) {
+                        int count = 0;
+
+                        if (snapshot.hasData) {
+                          count = snapshot.data!.size;
+                        }
+
+                        return Text(
+                          '$count',
+                          style: const TextStyle(fontSize: 18),
+                        );
+                      }
                     ),
-                    Text(
+                    const Text(
                       '게시물',
                       style: TextStyle(fontSize: 18),
                     ),
@@ -134,11 +146,12 @@ class AccountPage extends StatelessWidget {
                       }
 
                       List<Post> posts =
-                      snapshot.data!.docs.map((e) => e.data()).toList();
+                          snapshot.data!.docs.map((e) => e.data()).toList();
 
                       return GridView.builder(
                         itemCount: posts.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           mainAxisSpacing: 2.0,
                           crossAxisSpacing: 2.0,
@@ -150,7 +163,8 @@ class AccountPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DetailPostPage(post: post)),
+                                    builder: (context) =>
+                                        DetailPostPage(post: post)),
                               );
                             },
                             child: Hero(
